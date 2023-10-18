@@ -57,13 +57,53 @@ function dramaMoviesScore(moviesArray) {
 }
 
 // Iteration 5: Ordering by year - Order by year, ascending (in growing order)
-function orderByYear(moviesArray) {}
+function orderByYear(moviesArray) {
+  const moviesCopy = [...moviesArray];
+  moviesCopy.sort((a, b) => a.year - b.year || a.title.localeCompare(b.title));
+  return moviesCopy;
+}
 
 // Iteration 6: Alphabetic Order - Order by title and print the first 20 titles
-function orderAlphabetically(moviesArray) {}
+function orderAlphabetically(moviesArray) {
+  const moviesCopy = [...moviesArray];
+  moviesCopy.sort((a, b) => a.title.localeCompare(b.title));
+  const moviesCopyTitles = moviesCopy.map(movies => movies.title);
+  const moviesTitles = moviesCopyTitles.filter((movies, index) => index < 20);
+  return moviesTitles;
+}
 
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
-function turnHoursToMinutes(moviesArray) {}
+function turnHoursToMinutes(moviesArray) {
+  const moviesCopy = [...moviesArray];
+  const newMoviesDuration = moviesCopy.map(movies => {
+    const currentDuration = movies.duration;
+    let hours;
+    let minutes;
+    let newDuration;
+    if (currentDuration.includes(' ')) {
+      const durationArray = currentDuration.split(' ');
+      hours = durationArray[0].replace('h', '');
+      hours = +hours;
+      minutes = durationArray[1].replace('min', '');
+      minutes = +minutes;
+      newDuration = hours * 60 + minutes;
+    } else {
+      if (currentDuration.includes('h')) {
+        hours = currentDuration.replace('h', '');
+        hours = +hours;
+        newDuration = hours * 60;
+      } else if (currentDuration.includes('min')) {
+        minutes = currentDuration.replace('min', '');
+        minutes = +minutes;
+        newDuration = minutes;
+        console.log(newDuration);
+      }
+    }
+    movies.duration = newDuration;
+    return movies;
+  });
+  return newMoviesDuration;
+}
 
 // BONUS - Iteration 8: Best yearly score average - Best yearly score average
 function bestYearAvg(moviesArray) {}
