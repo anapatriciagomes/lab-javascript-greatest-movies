@@ -74,7 +74,7 @@ function orderAlphabetically(moviesArray) {
 
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
 function turnHoursToMinutes(moviesArray) {
-  const moviesCopy = [...moviesArray];
+  const moviesCopy = JSON.parse(JSON.stringify(moviesArray));
   const newMoviesDuration = moviesCopy.map(movies => {
     const currentDuration = movies.duration;
     let hours;
@@ -106,4 +106,54 @@ function turnHoursToMinutes(moviesArray) {
 }
 
 // BONUS - Iteration 8: Best yearly score average - Best yearly score average
-function bestYearAvg(moviesArray) {}
+function bestYearAvg(moviesArray) {
+  if (moviesArray.length === 0) {
+    return null;
+  } else {
+    // create a new object just with years and scores
+    const yearScoresArray = moviesArray.map(movies => {
+      return {
+        year: movies.year,
+        score: movies.score,
+      };
+    });
+
+    // group scores in an array for each year
+    const groupByYear = yearScoresArray.reduce((yearGroup, movie) => {
+      const { year } = movie;
+      yearGroup[year] = yearGroup[year] ?? [];
+      yearGroup[year].push(movie.score);
+      return yearGroup;
+    }, {});
+
+    // convert groupByYear into an array of objects
+    const yearDataArray = Object.keys(groupByYear).map(year => ({
+      year: year,
+      score: groupByYear[year],
+    }));
+
+    // calculate the average score for each year
+    const averageScoreByYear = yearDataArray.map(yearData => {
+      const sum = yearData.score.reduce((acc, cur) => acc + cur, 0);
+      return {
+        year: yearData.year,
+        score: +(sum / yearData.score.length).toFixed(2),
+      };
+    });
+
+    // find the maximum score, in case of tie find the minimum year
+    const bestYear = averageScoreByYear.reduce((acc, cur) => {
+      if (cur.score > acc.score) {
+        return cur;
+      } else if (cur.score === acc.score && cur.year < acc.year) {
+        return cur;
+      } else {
+        return acc;
+      }
+    });
+
+    console.log(bestYear);
+
+    return `The best year was ${bestYear.year} with an average score of ${bestYear.score}`;
+  }
+}
